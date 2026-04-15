@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Türkiye Şehir Bulma Oyunu</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -24,6 +24,17 @@
 </div>
 
 <div class="svg-turkiye-haritasi">
+
+  <!-- Zoom Kontrol Butonları -->
+  <div class="zoom-controls">
+    <button class="zoom-btn" id="zoom-in"  title="Yakınlaştır (+ veya tekerlek)">+</button>
+    <button class="zoom-btn" id="zoom-reset" title="Sıfırla" style="font-size:16px;">&#8635;</button>
+    <button class="zoom-btn" id="zoom-out" title="Uzaklaştır (- veya tekerlek)">&#8722;</button>
+  </div>
+
+  <!-- Mobil Pinch İpucu -->
+  <div class="zoom-hint" id="zoom-hint">👆 İki parmakla yakınlaştır &nbsp;·&nbsp; Sürükle gezin</div>
+
   <svg version="1.1" id="svg-turkiye-haritasi" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1052.3622 744.09448" xml:space="preserve">
         <g id="bolge-1" data-bolge="Marmara" >
           <g id="balikesir" data-plakakodu="10" data-alankodu="266" data-iladi="Balıkesir">
