@@ -117,8 +117,11 @@ body {
 
 .svg-turkiye-haritasi:active { cursor: grabbing; }
 
-/* SVG elemanı - transform buraya uygulanır */
+/* SVG elemanı: container'ı tamamen doldur, transform buraya uygulanır */
 .svg-turkiye-haritasi svg {
+    position: absolute; /* height:100% yerine bu daha güvenilir */
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     display: block;
@@ -198,70 +201,76 @@ path:hover { opacity: 0.85; }
 .zoom-btn:active { transform: scale(0.93); }
 .zoom-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
 
-/* Zoom ipucu tooltip */
+/* Zoom ipucu: sadece ilk 3 saniye göster, haritayı bloklamasın */
 .zoom-hint {
     position: absolute;
-    bottom: 16px;
+    top: 10px;               /* Alt yerine üste al, butonlarla çakışmasın */
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,0.65);
+    background: rgba(0,0,0,0.60);
     color: white;
-    font-size: 12px;
-    padding: 6px 14px;
+    font-size: 11px;
+    padding: 5px 12px;
     border-radius: 20px;
     pointer-events: none;
     opacity: 1;
-    transition: opacity 1s ease;
+    transition: opacity 1.2s ease;
     white-space: nowrap;
     z-index: 10;
+    display: none; /* Varsayılan: gizli — JS sadece mobilde gösterir */
 }
 
-.zoom-hint.hidden { opacity: 0; }
+.zoom-hint.visible { display: block; }
+.zoom-hint.hidden  { opacity: 0; }
 
 /* === MOBİL RESPONSIVE === */
 
-/* Tablet ve küçük laptop */
 @media screen and (max-width: 768px) {
     body { padding: 4px; }
 
     #game-title {
-        font-size: 16px;
-        margin-bottom: 4px;
+        font-size: 15px;
+        margin-bottom: 3px;
     }
 
-    /* Mobilde üst bar: soru üstte tam genişlik, süre+kalan altında yan yana */
+    /* Mobilde üst bar: TEK SATIRDA, wrap yok → haritaya maksimum alan */
     #top-bar {
         flex-direction: row;
-        flex-wrap: wrap;
-        padding: 8px 10px;
-        gap: 5px;
+        flex-wrap: nowrap;   /* Kesinlikle alta taşmasın */
+        padding: 6px 8px;
+        gap: 6px;
         border-radius: 8px;
-        justify-content: center;
+        align-items: center;
     }
 
-    /* Soru alanı önce ve tam genişlikte */
+    /* Soru alanı ortada, flex-grow ile esner */
     #question-area {
-        order: -1;
-        width: 100%;
-        font-size: 17px;
-        padding: 2px 0;
+        font-size: 15px;
+        order: 0;            /* Varsayılan sıra: [Süre] [Soru] [Kalan] */
+        flex-grow: 1;
+        width: auto;         /* wrap modundaki 100% genişliği kaldır */
+        padding: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
+    /* Bilgi kutucukları küçülsün ama okunabilir kalsın */
     .info-box {
-        font-size: 13px;
-        padding: 5px 12px;
-        flex: 1;
-        min-width: 80px;
+        font-size: 11px;
+        padding: 5px 8px;
+        flex-shrink: 0;      /* Küçülmesin */
+        white-space: nowrap;
         text-align: center;
     }
 
-    #game-header { margin-bottom: 4px; }
+    #game-header { margin-bottom: 3px; }
 
-    #start-btn { width: 100%; padding: 14px; font-size: 16px; }
-    #welcome-text { font-size: 15px; }
+    #start-btn { width: 100%; padding: 12px; font-size: 16px; }
+    #welcome-text { font-size: 14px; margin-bottom: 14px; }
 
-    .zoom-btn { width: 42px; height: 42px; font-size: 20px; }
-    .zoom-controls { bottom: 12px; right: 12px; gap: 5px; }
+    .zoom-btn { width: 40px; height: 40px; font-size: 20px; }
+    .zoom-controls { bottom: 10px; right: 10px; gap: 5px; }
 }
 
 /* Küçük telefonlar */

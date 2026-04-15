@@ -342,7 +342,9 @@ document.getElementById('zoom-reset')?.addEventListener('click', e => {
     if (!('ontouchstart' in window)) return; // sadece dokunmatik cihazlar
     const hint = document.getElementById('zoom-hint');
     if (!hint) return;
-    setTimeout(() => hint.classList.add('hidden'), 3500);
+    hint.classList.add('visible');              // önce g\u00f6ster
+    setTimeout(() => hint.classList.add('hidden'), 3000);   // 3s sonra solar
+    setTimeout(() => hint.classList.remove('visible'), 4500); // 4.5s sonra DOM'dan çık
 })();
 
 // Başlangıç UI durumu
