@@ -336,9 +336,6 @@ path:hover { opacity: 0.85; }
 
 /* Tam Ekran Butonu */
 .fullscreen-btn {
-    position: absolute;
-    top: 15px;
-    right: 25px;
     background: rgba(39, 174, 96, 0.95);
     color: white;
     border: none;
@@ -349,8 +346,7 @@ path:hover { opacity: 0.85; }
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     transition: all 0.2s ease-in-out;
-    z-index: 200;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
 }
@@ -385,8 +381,6 @@ path:hover { opacity: 0.85; }
     .game-wrapper { padding: 8px; }
     .game-frame { padding: 8px; border-radius: 8px; }
     .fullscreen-btn {
-        top: 8px;
-        right: 8px;
         padding: 6px 12px;
         font-size: 13px;
     }
