@@ -374,35 +374,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const fsBtn = document.getElementById('fullscreen-btn');
     const gameFrame = document.getElementById('game-frame');
 
+    // iOS/Fallback Pseudo-Fullscreen Modu Kontrolü
+    let isPseudoFullscreen = false;
+
+    function updateFullscreenUI() {
+        if (document.fullscreenElement || isPseudoFullscreen) {
+            fsBtn.innerHTML = '✖ Çıkış';
+        } else {
+            fsBtn.innerHTML = '⛶ Tam Ekran';
+        }
+    }
+
     if (fsBtn && gameFrame) {
         fsBtn.addEventListener('click', () => {
+            // Mobil cihaz kontrolü: Chrome veya Safari fark etmeksizin tüm iOS/Mobil tarayıcılar için
+            const isMobileDevice = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+            // Eğer önceden pseudo-fullscreen yapıldıysa çık (Ortak Mantık)
+            if (isPseudoFullscreen) {
+                gameFrame.classList.remove('ios-fullscreen');
+                isPseudoFullscreen = false;
+                updateFullscreenUI();
+
+                // Eğer Native API kullanılmışsa oradan da çıkması için güvence
+                if (document.fullscreenElement) {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) document.msExitFullscreen();
+                }
+                return;
+            }
+
+            // Yöntem 3: Tüm mobil cihazlarda doğrudan CSS (Pseudo) tam eylemine geçiş yap
+            if (isMobileDevice) {
+                gameFrame.classList.add('ios-fullscreen');
+                isPseudoFullscreen = true;
+                updateFullscreenUI();
+                return; // Native Fullscreen API'sini tamamen atla (Mobil için iptal)
+            }
+
+            // Masaüstü cihazlar için standart (Native) API'yi kullan
             if (!document.fullscreenElement) {
                 if (gameFrame.requestFullscreen) {
-                    gameFrame.requestFullscreen();
-                } else if (gameFrame.webkitRequestFullscreen) { /* Safari */
+                    gameFrame.requestFullscreen().catch(err => {
+                        // Desktop'ta bile bir sebepten engellenirse fallback at
+                        gameFrame.classList.add('ios-fullscreen');
+                        isPseudoFullscreen = true;
+                        updateFullscreenUI();
+                    });
+                } else if (gameFrame.webkitRequestFullscreen) { /* Safari Masaüstü */
                     gameFrame.webkitRequestFullscreen();
                 } else if (gameFrame.msRequestFullscreen) { /* IE11 */
                     gameFrame.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { /* Safari */
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { /* IE11 */
-                    document.msExitFullscreen();
+                } else {
+                    // API desteği hiç yoksa
+                    gameFrame.classList.add('ios-fullscreen');
+                    isPseudoFullscreen = true;
+                    updateFullscreenUI();
                 }
             }
         });
 
-        // Tam ekran durumu değiştiğinde buton metnini/ikonunu güncelle
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                fsBtn.innerHTML = '✖ Çıkış';
-            } else {
-                fsBtn.innerHTML = '⛶ Tam Ekran';
-            }
-        });
+        // Tam ekran durumu değiştiğinde buton metnini/ikonunu güncelle (Native API üzerinden tetiklenirse)
+        document.addEventListener('fullscreenchange', updateFullscreenUI);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+        document.addEventListener('msfullscreenchange', updateFullscreenUI);
     }
 
     // 2. TEMA (Mod) DEĞİŞTİRİCİ

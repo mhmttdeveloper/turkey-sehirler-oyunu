@@ -562,6 +562,44 @@ path:hover {
 .game-frame.dark-mode .theme-btn:hover { background: rgba(241, 196, 15, 0.15); border-color: rgba(241, 196, 15, 0.8); box-shadow: 0 6px 20px rgba(241, 196, 15, 0.2); }
 .game-frame.dark-mode .fullscreen-btn:hover { background: rgba(0, 230, 118, 0.15); border-color: rgba(0, 230, 118, 0.8); box-shadow: 0 6px 20px rgba(0, 230, 118, 0.2); }
 
+/* iOS Pseudo-Fullscreen Fallback */
+.game-frame.ios-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    z-index: 9999 !important;
+    border-radius: 0 !important;
+    padding: 10px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+.game-frame.ios-fullscreen .fullscreen-btn {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border-color: rgba(231, 76, 60, 0.4);
+}
+.game-frame.ios-fullscreen .fullscreen-btn:hover {
+    background: #e74c3c;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+    border-color: #e74c3c;
+}
+
+.game-frame.dark-mode.ios-fullscreen .fullscreen-btn { 
+    background: rgba(231, 76, 60, 0.1); 
+    color: #ff4a5a; 
+    border-color: rgba(231, 76, 60, 0.4); 
+}
+.game-frame.dark-mode.ios-fullscreen .fullscreen-btn:hover { 
+    background: #ff4a5a; 
+    color: #ffffff; 
+    box-shadow: 0 6px 20px rgba(255, 74, 90, 0.3); 
+    border-color: #ff4a5a; 
+}
+
 @media screen and (max-width: 768px) {
     .site-header { padding: 12px 15px; }
     .site-logo { font-size: 20px; }
