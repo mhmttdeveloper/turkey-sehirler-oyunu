@@ -147,8 +147,18 @@ let scale      = 1;
 let translateX = 0;
 let translateY = 0;
 
-const MIN_SCALE = 1;
-const MAX_SCALE = 6;
+let MIN_SCALE = 1;
+let MAX_SCALE = 6;
+
+function updateScaleLimits() {
+    if (window.innerWidth <= 768) {
+        MIN_SCALE = 2; // Mobilde genişliğin yarısı kadarını göstermek için
+        MAX_SCALE = 8;
+    } else {
+        MIN_SCALE = 1;
+        MAX_SCALE = 6;
+    }
+}
 
 /** SVG elemanına transform uygula */
 function applyTransform() {
@@ -185,19 +195,25 @@ function doZoom(newScale, originX, originY) {
 
 /** Zoom'u sıfırla */
 function resetZoom() {
-    scale = 1; translateX = 0; translateY = 0;
+    updateScaleLimits();
+    scale = MIN_SCALE; 
+    const rect = mapContainer.getBoundingClientRect();
+    // Min_scale > 1 ise (mobilde) en azından ortalı gelsin
+    translateX = (rect.width - (rect.width * scale)) / 2; 
+    translateY = (rect.height - (rect.height * scale)) / 2;
+    
+    clampTranslate();
     applyTransform();
     refreshZoomUI();
 }
 
-/** Zoom butonlarının durumunu güncelle */
 function refreshZoomUI() {
     const btnIn    = document.getElementById('zoom-in');
     const btnOut   = document.getElementById('zoom-out');
     const btnReset = document.getElementById('zoom-reset');
     if (btnIn)    btnIn.disabled    = scale >= MAX_SCALE;
     if (btnOut)   btnOut.disabled   = scale <= MIN_SCALE;
-    if (btnReset) btnReset.style.opacity = scale > 1.01 ? '1' : '0.4';
+    if (btnReset) btnReset.style.opacity = scale > (MIN_SCALE + 0.01) ? '1' : '0.4';
 }
 
 /* --------------------------------------------------------
@@ -349,3 +365,81 @@ document.getElementById('zoom-reset')?.addEventListener('click', e => {
 
 // Başlangıç UI durumu
 refreshZoomUI();
+
+/* --------------------------------------------------------
+   Oyun Sitesi (Portal) Tam Ekran ve viewBox Ayarı
+   -------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. TAM EKRAN (Fullscreen) Modu
+    const fsBtn = document.getElementById('fullscreen-btn');
+    const gameFrame = document.getElementById('game-frame');
+
+    if (fsBtn && gameFrame) {
+        fsBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                if (gameFrame.requestFullscreen) {
+                    gameFrame.requestFullscreen();
+                } else if (gameFrame.webkitRequestFullscreen) { /* Safari */
+                    gameFrame.webkitRequestFullscreen();
+                } else if (gameFrame.msRequestFullscreen) { /* IE11 */
+                    gameFrame.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+            }
+        });
+
+        // Tam ekran durumu değiştiğinde buton metnini/ikonunu güncelle
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fsBtn.innerHTML = '✖ Çıkış';
+            } else {
+                fsBtn.innerHTML = '⛶ Tam Ekran';
+            }
+        });
+    }
+
+    // 2. SVG viewBox'unu İçeriğe Göre Daralt (Sağ/Sol/Alt gereksiz boşlukları siler)
+    // Sadece bir kez DOM hazır olduğunda hesapla.
+    setTimeout(() => {
+        if (svgEl) {
+            try {
+               // SVG üzerindeki tüm çizilmiş yolların uç sınırlarını hesaplar
+               const bbox = svgEl.getBBox();
+               
+               // Kenarlara çok yapışmaması için %1-2 arası ufak pay ekleyelim
+               const paddingX = bbox.width * 0.01;
+               const paddingY = bbox.height * 0.01;
+               
+               const newX = bbox.x - paddingX;
+               const newY = Math.max(0, bbox.y - paddingY); // Üstü fazla kesmeyelim diye garantiye alıyoruz
+               const newW = bbox.width + (paddingX * 2);
+               const newH = bbox.height + (paddingY * 2);
+               
+               // Yeni (kırpılmış) görünüm kutusunu (viewBox) uygula
+               svgEl.setAttribute('viewBox', `${newX} ${newY} ${newW} ${newH}`);
+               
+               // Başlangıçta sınırları (mobil scale) ayarlayıp ortalaması için
+               resetZoom();
+            } catch(e) {
+               console.log("Harita kenar boşlukları hesaplanırken küçük bir hata oluştu: ", e);
+            }
+        }
+    }, 150);
+
+    // Pencere boyutu/tam ekran durumu değişirse mobil scaleları yeniden denetle
+    window.addEventListener('resize', () => {
+        const oldMin = MIN_SCALE;
+        updateScaleLimits();
+        if (scale < MIN_SCALE) {
+            resetZoom();
+        }
+    });
+
+});

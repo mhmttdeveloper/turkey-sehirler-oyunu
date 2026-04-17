@@ -8,7 +8,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="game-header">
+
+<!-- Oyun Sitesi (Portal) Arayüzü -->
+<header class="site-header">
+    <div class="site-logo">🎮 Game<span>Portal</span></div>
+</header>
+
+<main class="game-wrapper">
+    <div class="game-frame" id="game-frame">
+        <!-- Tam Ekran Butonu -->
+        <button id="fullscreen-btn" class="fullscreen-btn" title="Tam Ekran Modu">
+            ⛶ Tam Ekran
+        </button>
+
+        <div id="game-header">
     <h1 id="game-title">Türkiye Şehir Bulma Oyunu</h1>
     
     <div id="top-bar" style="display: none;">
@@ -299,9 +312,11 @@
               </g>
         </g>
       </svg>
-    </div>
+    </div> <!-- svg-turkiye-haritasi -->
+
+    </div> <!-- /.game-frame -->
+</main> <!-- /.game-wrapper -->
 
 <script src="script.js"></script>
-
 </body>
 </html>

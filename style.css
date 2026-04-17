@@ -6,10 +6,11 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
-    background: #f0f2f5;
+    background: #11141e; /* Gaming tema koyu arkaplan */
+    color: #e5e7eb;
     margin: 0;
-    padding: 8px;
-    /* Tam ekran flex düzeni: header + harita */
+    padding: 0;
+    /* Tam ekran flex düzeni: portal header + game wrapper */
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -40,7 +41,7 @@ body {
     padding: 12px 24px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    max-width: 1200px;
+    max-width: none; /* Eskiden 1200px'di, tam genişlik istendiği için kaldırıldı */
     margin: 0 auto;
     gap: 10px;
     width: 100%;
@@ -126,7 +127,7 @@ body {
     height: 100%;
     display: block;
     transform-origin: 0 0; /* Sol üst köşeden zoom */
-    will-change: transform; /* GPU hızlandırma */
+    /* will-change: transform; GPU kompozitleme zoomda haritayı bulanıklaştırıyordu, Sharpness için iptal edildi */
 }
 
 /* === ŞEHİR RENKLERİ === */
@@ -279,4 +280,114 @@ path:hover { opacity: 0.85; }
     #question-area { font-size: 15px; }
 
     .zoom-btn { width: 38px; height: 38px; font-size: 18px; }
+}
+
+/* === YENİ OYUN SİTESİ (PORTAL) KAPSAYICI TASARIMI === */
+
+.site-header {
+    background: #1a1e29;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    border-bottom: 2px solid #27ae60;
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+.site-logo {
+    font-size: 26px;
+    font-weight: 800;
+    color: #fff;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 1px;
+}
+.site-logo span {
+    color: #27ae60;
+}
+
+.game-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden; 
+    box-sizing: border-box;
+}
+
+.game-frame {
+    width: 100%;
+    height: 100%;
+    background: #f0f2f5; /* Eski body arka planı */
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    padding: 12px;
+    transition: border-radius 0.2s ease, padding 0.2s ease;
+}
+
+/* Tam Ekran Butonu */
+.fullscreen-btn {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    background: rgba(39, 174, 96, 0.95);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: all 0.2s ease-in-out;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.fullscreen-btn:hover {
+    background: #2ecc71;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}
+
+.fullscreen-btn:active {
+    transform: translateY(0);
+}
+
+/* Tam ekrandayken game-frame'in paddingi ve yuvarlamaları olmasın */
+.game-frame:fullscreen {
+    border-radius: 0;
+    padding: 10px; 
+}
+
+.game-frame:fullscreen .fullscreen-btn {
+    background: rgba(231, 76, 60, 0.95); /* Kırmızı çıkış butonu */
+}
+.game-frame:fullscreen .fullscreen-btn:hover {
+    background: #e74c3c;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+@media screen and (max-width: 768px) {
+    .site-header { padding: 12px 15px; }
+    .site-logo { font-size: 20px; }
+    .game-wrapper { padding: 8px; }
+    .game-frame { padding: 8px; border-radius: 8px; }
+    .fullscreen-btn {
+        top: 8px;
+        right: 8px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
 }
