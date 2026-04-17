@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Türkiye Şehir Bulma Oyunu</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,7 +18,11 @@
 
 <main class="game-wrapper">
     <div class="game-frame" id="game-frame">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px; flex-shrink: 0;">
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 8px; flex-shrink: 0;">
+            <!-- Tema Toggle Butonu -->
+            <button id="theme-toggle-btn" class="theme-btn" title="Açık/Koyu Mod">
+                🌙 Koyu Mod
+            </button>
             <!-- Tam Ekran Butonu -->
             <button id="fullscreen-btn" class="fullscreen-btn" title="Tam Ekran Modu">
                 ⛶ Tam Ekran

@@ -59,17 +59,17 @@ function nextQuestion() {
         const accuracy = totalAttempts > 0
             ? Math.round((initialCityCount / totalAttempts) * 100)
             : 0;
-        welcomeText.innerHTML = `🎉 Tebrikler! Haritayı tamamladın! 🎉<br><br>
-            <span style="color:#27ae60; font-weight:bold;">⏳ Süre: ${finalTime}</span>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
-            <span style="color:#f39c12; font-weight:bold;">🎯 Doğruluk: %${accuracy}</span>`;
+        welcomeText.innerHTML = `<span class="msg-title">🎉 Harika İş Çıkardın! 🎉</span>
+            <span class="msg-timer">⏳ Süre: ${finalTime}</span>
+            <br><br>
+            <span class="msg-accuracy">🎯 Doğruluk: %${accuracy}</span>`;
         startBtn.textContent = 'Tekrar Yarış';
         currentTarget = null;
         return;
     }
     const idx = Math.floor(Math.random() * cities.length);
     currentTarget = cities[idx];
-    questionText.innerHTML = `<span style="color:#2c3e50">${currentTarget.name}</span>`;
+    questionText.innerHTML = `<span class="msg-question">${currentTarget.name}</span>`;
 }
 
 // Yanlış/doğru tıklama işleyicisi — hem mouse click hem touch tap için ortak
@@ -93,7 +93,7 @@ function handleCityClick(clickedGroup) {
 
         cities = cities.filter(c => c.id !== currentTarget.id);
         remainingText.textContent = cities.length;
-        questionText.innerHTML = `<span style="color:#27ae60; font-size:1.2em;">Doğru! ✓</span>`;
+        questionText.innerHTML = `<span class="msg-correct">Doğru! ✓</span>`;
         currentTarget = null;
         setTimeout(() => nextQuestion(), 600);
 
@@ -102,7 +102,7 @@ function handleCityClick(clickedGroup) {
         mistakes[currentTarget.id] = (mistakes[currentTarget.id] || 0) + 1;
         clickedGroup.classList.add('wrong-city');
         setTimeout(() => clickedGroup.classList.remove('wrong-city'), 500);
-        questionText.innerHTML = `<span style="color:#e74c3c">Yanlış!</span> <span style="color:#2c3e50">${currentTarget.name}</span>`;
+        questionText.innerHTML = `<span class="msg-wrong-red">Yanlış!</span> <span class="msg-wrong-blue">${currentTarget.name}</span>`;
     }
 }
 
@@ -405,7 +405,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. SVG viewBox'unu İçeriğe Göre Daralt (Sağ/Sol/Alt gereksiz boşlukları siler)
+    // 2. TEMA (Mod) DEĞİŞTİRİCİ
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    if (themeBtn && gameFrame) {
+        themeBtn.addEventListener('click', () => {
+            gameFrame.classList.toggle('dark-mode');
+            if (gameFrame.classList.contains('dark-mode')) {
+                themeBtn.innerHTML = '☀ Açık Mod';
+            } else {
+                themeBtn.innerHTML = '🌙 Koyu Mod';
+            }
+        });
+    }
+
+    // 3. SVG viewBox'unu İçeriğe Göre Daralt (Sağ/Sol/Alt gereksiz boşlukları siler)
     // Sadece bir kez DOM hazır olduğunda hesapla.
     setTimeout(() => {
         if (svgEl) {
