@@ -418,7 +418,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. SVG viewBox'unu İçeriğe Göre Daralt (Sağ/Sol/Alt gereksiz boşlukları siler)
+    // 3. OYUN İÇİ SAĞ TIK ENGELLEME
+    if (gameFrame) {
+        gameFrame.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+    }
+
+    // 4. SVG viewBox'unu İçeriğe Göre Daralt (Sağ/Sol/Alt gereksiz boşlukları siler)
     // Sadece bir kez DOM hazır olduğunda hesapla.
     setTimeout(() => {
         if (svgEl) {
